@@ -1,0 +1,10 @@
+workflows:
+  build-apk-debug:
+    name: Build APK (debug)
+    environment:
+      flutter: stable
+    scripts:
+      - flutter pub get
+      - flutter build apk --debug
+    artifacts:
+      - build/app/outputs/flutter-apk/app-debug.apk
