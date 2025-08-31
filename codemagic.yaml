@@ -3,8 +3,17 @@ workflows:
     name: Build APK (debug)
     environment:
       flutter: stable
+      vars:
+        GRADLE_OPTS: "-Xmx4g -Dorg.gradle.jvmargs='-Xmx4g -XX:MaxMetaspaceSize=512m -Dfile.encoding=UTF-8'"
     scripts:
+      - flutter clean
       - flutter pub get
-      - flutter build apk --debug
+      - |
+        echo "org.gradle.jvmargs=-Xmx4g -Dfile.encoding=UTF-8" >> android/gradle.properties
+        echo "org.gradle.parallel=false" >> android/gradle.properties
+        echo "org.gradle.workers.max=1" >> android/gradle.properties
+        echo "android.useAndroidX=true" >> android/gradle.properties
+        echo "android.enableJetifier=true" >> android/gradle.properties
+      - flutter build apk --debug --split-per-abi
     artifacts:
-      - build/app/outputs/flutter-apk/app-debug.apk
+      - build/app/outputs/flutter-apk/*.apk
